@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://vaikotuul@github.com/vaikotuul/VP1.git"
+    "url": "git+https://vaikotuul@github.com/vaikotuul/VP2.git"
   },
   "keywords": [
     "veebiprogrammeerimine",
@@ -17,10 +17,11 @@
   "author": "Vaiko Villiam Tuul",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/vaikotuul/VP1/issues"
+    "url": "https://github.com/vaikotuul/VP2/issues"
   },
-  "homepage": "https://github.com/vaikotuul/VP1#readme",
+  "homepage": "https://github.com/vaikotuul/VP2#readme",
   "dependencies": {
-    "express": "~4.16.1"
+    "ejs": "^3.1.10",
+    "express": "^4.21.0"
   }
 }
