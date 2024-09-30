@@ -2,11 +2,15 @@ const express = require("express");
 const dateTime = require("./dateTime");
 const fs = require("fs");
 const app = express();
+//et saada kõik päringust kätte
+const bodyparser = require("body-parser")
 
 //määran view mootori
 app.set("view engine", "ejs");
 //määran jagatavate failide kausta
 app.use(express.static("public"));
+//kasutame body-parserit päringute parsimiseks (kui ainult tekst, siis false, kui ka pildid jms, siis true)
+app.use(bodyparser.urlencoded({extended: false}));
 
 app.get("/", (req, res)=>{
 	//res.send("Express läks täitsa käima!");
@@ -32,4 +36,30 @@ app.get("/vanasonad", (req, res)=>{
 		}
 	});
 });
+
+app.get("/regvisit", (req, res)=>{
+	res.render("regvisit");
+});
+
+app.post("/regvisit", (req, res)=>{
+	//console.log(req.body);
+	//avan txt faili selliselt et kui seda pole olemas, luuakse
+	fs.open("public/textfiles/log.txt", "a", (err, file)=>{
+		if(err){
+			throw err;
+		}
+		else {
+			fs.appendFile("public/textfiles/log.txt", req.body.firstNameInput + " " + req.body.lastNameInput + ";", (err)=>{
+				if(err){
+					throw err;
+				}
+				else {
+					console.log("Faili kirjutati!");
+					res.render("regvisit");
+				}
+			});
+		}
+	});
+});
+
 app.listen(5221);
