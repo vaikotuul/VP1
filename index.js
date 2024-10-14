@@ -37,11 +37,27 @@ app.get("/vanasonad", (req, res)=>{
 	});
 });
 
+app.get("/reglist", (req, res)=>{
+	let regList = [];
+	fs.readFile("public/textfiles/log.txt", "utf8", (err, data)=>{
+		if(err){
+			throw err;
+		}
+		else{
+			regList = data.split(";");
+			res.render("reglist", {h1: "Regristreeritud külastused", listData: regList})
+		}
+	});
+});
+
 app.get("/regvisit", (req, res)=>{
 	res.render("regvisit");
 });
 
 app.post("/regvisit", (req, res)=>{
+	const weekdayNow = dateTime.weekDayEt();
+	const dateNow = dateTime.dateFormattedEt();
+	const timeNow = dateTime.timeFormattedEt();
 	//console.log(req.body);
 	//avan txt faili selliselt et kui seda pole olemas, luuakse
 	fs.open("public/textfiles/log.txt", "a", (err, file)=>{
@@ -49,7 +65,7 @@ app.post("/regvisit", (req, res)=>{
 			throw err;
 		}
 		else {
-			fs.appendFile("public/textfiles/log.txt", req.body.firstNameInput + " " + req.body.lastNameInput + ";", (err)=>{
+			fs.appendFile("public/textfiles/log.txt",";" + req.body.firstNameInput + " " + req.body.lastNameInput + " " + dateNow + " " + timeNow, (err)=>{
 				if(err){
 					throw err;
 				}

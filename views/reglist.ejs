@@ -11,17 +11,16 @@
 	<hr>
 	<ul>
 	   <li><a href="/">Avalehele</a></li>
+	   <li><a href="/timenow">Ajainfo</a></li>
 	   <li><a href="/vanasonad">Vanasõnad</a></li>
 	   <li><a href="/regvisit">Regristreeri oma külastus</a></li>
-	   <li><a href="/reglist">Regristreeritud külastused</a></li>
 	</ul>
 	<hr>
-	<h2>Praegune ajahetk</h2>
-	<p>Selle lehe avamise hetkel oli:</p>
-	<ul>
-		<li>Nädalapäev: <%= nowWD %></li>
-		<li>Kuupäev: <%= nowD %></li>
-		<li>Kellaaeg: <%= nowT %></li>
-	</ul>
+	<h1><%= h1 %></h1>
+	<ol>
+		<% listData.forEach(function(phrase){ %>
+		   <li><%= phrase %></li>
+		<% }); %>
+	</ol>
 </body>
 </html>
