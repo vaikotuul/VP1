@@ -91,9 +91,50 @@ app.post("/regvisit", (req, res)=>{
 	});
 });
 
+app.get("/regvisitdb", (req, res)=>{
+	let notice = "";
+	let firstName = "";
+	let lastName = "";
+	res.render("regvisitdb", {notice: notice, firstName: firstName, lastName: lastName});
+});
+
+app.post("/regvisitdb", (req, res)=>{
+	let notice = "";
+	let firstName = "";
+	let lastName = "";
+	//kontrollin kas kõik vajalikud andmed on olemas
+	if(!req.body.firstNameInput || !req.body.lastNameInput){
+		//console.log("Osa andmeid puudu!");
+		notice = "Osa andmeid puudu!";
+		firstName = req.body.firstNameInput;
+		lastName = req.body.lastNameInput;
+		res.render("regvisitdb", {notice: notice, firstName: firstName, lastName: lastName});
+	}
+	else {
+		let sqlReq = "INSERT INTO visitlog (first_name, last_name) VALUES(?,?)";
+		conn.query(sqlReq, [req.body.firstNameInput, req.body.lastNameInput], (err, sqlRes)=>{
+			if(err){
+				notice = "Tehnilistel põhjustel andmeid ei salvestatud!";
+				res.render("regvisitdb", {notice: notice, firstName: firstName, lastName: lastName});
+				throw err;
+			}
+			else {
+				//notice = "Andmed salvestati!";
+				//res.render("regvisitdb", {notice: notice, firstName: firstName, lastName: lastName});
+				res.redirect("/");
+			}
+		});
+	}
+});
+
 app.get("/eestifilm", (req, res)=>{
 	res.render("eestifilm");
 });
+
+app.get("/eestifilm/lisa", (req, res)=>{
+	res.render("eestifilm/lisa");
+});
+
 
 app.get("/eestifilm/tegelased", (req, res)=>{
 	//loon andmebaasi päringus

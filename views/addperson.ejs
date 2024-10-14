@@ -16,7 +16,7 @@
 	   <li><a href="/reglist">Regristreeritud külastused</a></li>
 	</ul>
 	<hr>
-	<h2>Regristreeri oma külastus sellele veebilehele (tekstifaili)</h2>
+	<h2>Lisa filmitegelane</h2>
 	<form method="POST">
 		<label for="firstNameInput">Sisesta oma eesnimi: </label>
 		<input type="text" id="firstNameInput" name="firstNameInput"
@@ -24,10 +24,12 @@
 		<br>
 		<label for="lastNameInput">Sisesta oma perekonnanimi: </label>
 		<input type="text" id="lastNameInput" name="lastNameInput"
-		placeholder="Perekonnanimi ...">
+		placeholder="Perekonnanimi ..." >
 		<br>
-		<input type="submit" id="regSubmit" name="regSubmit" value="Salvesta"
-		>
+		<label for="birthDateInput">Sisesta sünnikuupäev: </label>
+		<input type="date" id="birthDateInput" name="birthDateInput" placeholder="Sünnikuupäev...">
+		<input type="submit" id="regSubmit" name="regSubmit" value="Salvesta">
 	</form>
+	<p><%= notice %></p>
 </body>
 </html>
