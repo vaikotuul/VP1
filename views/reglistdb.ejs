@@ -10,15 +10,17 @@
 	<p>See leht on loodud õppetöö raames <a href="https://www.tlu.ee/">Tallinna Ülikoolis</a>, Digitehnoloogiate instituudis ja ei sisalda tõsiseltvõetavat materjali</p>
 	<hr>
 	<ul>
+	   <li><a href="/">Avalehele</a></li>
 	   <li><a href="/timenow">Ajainfo</a></li>
 	   <li><a href="/vanasonad">Vanasõnad</a></li>
-	   <li><a href="/regvisit">Regristreeri oma külastus (tekstifaili)</a></li>
-	   <li><a href="/regvisitdb">Regristreeri oma külastus (andmebaasi)</a></li>
-	   <li><a href="/reglist">Regristreeritud külastused (tekstifaili)</a></li>
-	   <li><a href="/reglistdb">Regristreeritud külastused (andmebaasi)</a></li>
-	   <li><a href="/eestifilm">Eesti film</a></li>
-	   
+	   <li><a href="/regvisit">Regristreeri oma külastus</a></li>
 	</ul>
 	<hr>
+	<h1><%= h1 %></h1>
+	<ul>
+	  <% visitlog.forEach(function(item){ %>
+	  <li><%= item.first_name %> <%= item.last_name %></li>
+	  <% }); %>
+	</ul>
 </body>
 </html>

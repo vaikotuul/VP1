@@ -1,0 +1,48 @@
+<DOCTYPE! html>
+<html lang="et">
+<head>
+	<meta charset="utf-8">
+	<title>Vaiko Villiam Tuul</title>
+</head>
+<body>
+	<img src="/banner/vp_banner_2024.png" alt="VP 2024 bänner">
+	<h1>Vaiko Villiam Tuul</h1>
+	<p>See leht on loodud õppetöö raames <a href="https://www.tlu.ee/">Tallinna Ülikoolis</a>, Digitehnoloogiate instituudis ja ei sisalda tõsiseltvõetavat materjali</p>
+	<hr>
+	<ul>
+	   <li><a href="/">Avalehele</a></li>
+	   <li><a href="/timenow">Ajainfo</a></li>
+	   <li><a href="/vanasonad">Vanasõnad</a></li>
+	   <li><a href="/reglist">Regristreeritud külastused</a></li>
+	</ul>
+	<hr>
+	<h1>Filmide ja tegelaste haldamine</h1>
+
+    <form id="personForm" method="POST" action="/submit">
+        <h2>Lisa filmitegelane</h2>
+        <label for="personName">Tegelase nimi:</label>
+        <input type="text" id="personName" name="personName" required>
+        <button type="submit" name="personSubmit">Lisa tegelane</button>
+    </form>
+
+    <form id="filmForm" method="POST" action="/submit">
+        <h2>Lisa film</h2>
+        <label for="filmTitle">Filmi pealkiri:</label>
+        <input type="text" id="filmTitle" name="filmTitle" required>
+        <label for="filmYear">Aasta:</label>
+        <input type="number" id="filmYear" name="filmYear" required>
+        <button type="submit" name="filmSubmit">Lisa film</button>
+    </form>
+
+    <form id="roleForm" method="POST" action="/submit">
+        <h2>Lisa tegelase roll filmis</h2>
+        <label for="rolePerson">Tegelase nimi:</label>
+        <input type="text" id="rolePerson" name="rolePerson" required>
+        <label for="roleFilm">Filmi pealkiri:</label>
+        <input type="text" id="roleFilm" name="roleFilm" required>
+        <label for="roleType">Roll (näitleja, režissöör vms):</label>
+        <input type="text" id="roleType" name="roleType" required>
+        <button type="submit" name="roleSubmit">Lisa roll</button>
+    </form>
+</body>
+</html>

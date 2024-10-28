@@ -127,12 +127,51 @@ app.post("/regvisitdb", (req, res)=>{
 	}
 });
 
+app.get("/reglistdb", (req, res)=>{
+	let sqlReq = "SELECT first_name, last_name FROM visitlog";
+	conn.query(sqlReq, (err, sqlRes)=>{
+		if(err){
+			throw err;
+		}
+		else{
+			res.render("reglistdb", {h1: "Regristreeritud külastused", visitlog: sqlRes});
+		}
+	});
+});
+
 app.get("/eestifilm", (req, res)=>{
 	res.render("eestifilm");
 });
 
 app.get("/eestifilm/lisa", (req, res)=>{
-	res.render("eestifilm/lisa");
+	res.render("lisa")
+});
+
+app.post("/eestifilm/lisa", (req, res)=>{
+	// Filmitegelase lisamine
+    if (req.body.personSubmit) {
+        const personName = req.body.personName();
+        console.log("Lisatud tegelane:", {personName});
+        res.send("Tegelane ", {personName}, " lisatud!");
+    }
+
+    // Filmi lisamine
+    if (req.body.filmSubmit) {
+        const filmTitle = req.body.filmTitle();
+        const filmYear = req.body.filmYear();
+        console.log("Lisatud film:", {filmTitle}, {filmYear});
+        res.send("Film ", {filmTitle}, " ", {filmYear}, " lisatud!");
+    }
+
+    // Rolli lisamine
+    if (req.body.roleSubmit) {
+        const rolePerson = req.body.rolePerson();
+        const roleFilm = req.body.roleFilm();
+        const roleType = req.body.roleType();
+        console.log("Lisatud roll: ", {rolePerson}, " filmis ", {roleFilm}, " kui ", {roleType});
+        res.send("Roll ", {rolePerson}, " filmis ", {roleFilm}, " kui ", {roleType}, " lisatud!");
+	}
+	res.render("lisa");
 });
 
 
@@ -151,5 +190,7 @@ app.get("/eestifilm/tegelased", (req, res)=>{
 	});
 	//res.render("tegelased");
 });
+
+
 
 app.listen(5221);
