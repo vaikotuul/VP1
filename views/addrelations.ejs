@@ -1,0 +1,54 @@
+<DOCTYPE! html>
+<html lang="et">
+<head>
+	<meta charset="utf-8">
+	<title>Vaiko Villiam Tuul</title>
+</head>
+<body>
+	<img src="/banner/vp_banner_2024.png" alt="VP 2024 bänner">
+	<h1>Vaiko Villiam Tuul</h1>
+	<p>See leht on loodud õppetöö raames <a href="https://www.tlu.ee/">Tallinna Ülikoolis</a>, Digitehnoloogiate instituudis ja ei sisalda tõsiseltvõetavat materjali</p>
+	<hr>
+	<ul>
+	   <li><a href="/home">Avalehele</a></li>
+	   <li><a href="/timenow">Ajainfo</a></li>
+	   <li><a href="/vanasonad">Vanasõnad</a></li>
+	   <li><a href="/reglist">Regristreeritud külastused</a></li>
+	</ul>
+	<hr>
+	<h2>Lisa filmitegelaste seoseid</h2>
+	<form method="POST">
+		<label for="personSelect">Vali filmitegelane: </label>
+		<br>
+		<select id="personSelect" name="personSelect">
+			<option selected disabled>Vali tegelane</option>
+			<% personList.forEach(function(person) { %>
+				<option value="<%= person.id %>"><%= person.first_name %> <%= person.last_name %>, sünd, <%= person.birth_date %> </option>
+			<% }); %>
+		</select>
+		<br>
+		<label for="movieSelect">Vali film: </label>
+		<br>
+		<select id="movieSelect" name="movieSelect">
+			<option selected disabled>Vali film</option>
+			<% movieList.forEach(function(movie) { %>
+				<option value="<%= movie.id %>"><%= movie.title %>, toodetud: <%= movie.production_year %> </option>
+			<% }); %>
+		</select>
+		<br>
+		<label for="positionSelect">Vali roll/amet: </label>
+		<br>
+		<select id="positionSelect" name="positionSelect">
+			<option selected disabled>Vali roll/amet</option>
+			<% positionList.forEach(function(position) { %>
+				<option value="<%= position.id %>"> <%= position.position_name %> </option>
+			<% }); %>
+		</select>
+		<br>
+			<label for="roleInput">Roll/tegelaskuju (kui on näitleja)</label>
+			<input type="text" id="roleInput" name="roleInput" placeholder="Tegelaskuju...">
+		<br>
+		<input type="submit" id="relationSubmit" name="relationSubmit" value="Salvesta">
+	</form>
+</body>
+</html>

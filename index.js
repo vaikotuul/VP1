@@ -16,6 +16,8 @@ const sharp = require("sharp");
 const bcrypt = require("bcrypt");
 //sessioonihaldur
 const session = require("express-session");
+//asünkroonsuse võimaldaja
+const asyn = require("async");
 
 //määran view mootori
 app.set("view engine", "ejs");
@@ -264,40 +266,166 @@ app.get("/eestifilm", (req, res)=>{
 	res.render("eestifilm");
 });
 
+//Filmiandmete lisamine andmebaasi
 app.get("/eestifilm/lisa", (req, res)=>{
-	res.render("addperson");
+    let firstName = "";
+    let lastName = "";
+    let movieTitle = "";
+    let productionYear = "";
+    let duration = "";
+    let movieDesc = "";
+    let posName = "";
+    let posDesc = "";
+	notice = "";
+    res.render("addperson", {notice: notice, firstName: firstName, lastName: lastName, movieTitle: movieTitle, productionYear: productionYear, duration: duration, movieDesc: movieDesc, posName: posName, posDesc: posDesc});
 });
 
 app.post("/eestifilm/lisa", (req, res)=>{
-	// Filmitegelase lisamine
-    if (req.body.personSubmit) {
-        const personName = req.body.personName();
-        console.log("Lisatud tegelane:", {personName});
-        res.send("Tegelane ", {personName}, " lisatud!");
+    let firstName = "";
+    let lastName = "";
+    let birthDate = "";
+    let movieTitle = "";
+    let productionYear = "";
+    let duration = "";
+    let movieDesc = "";
+    let posName = "";
+    let posDesc = "";
+    if(req.body.personSubmit){
+        if(!req.body.firstNameInput || !req.body.lastNameInput || !req.body.birthDateInput){
+            notice = "Osa andmeid on puudu!";
+            firstName = req.body.firstNameInput;
+            lastName = req.body.lastNameInput;
+            birthDate = req.body.birthDateInput;
+            res.render("addperson", {notice: notice, firstName: firstName, lastName: lastName, movieTitle: movieTitle, productionYear: productionYear, duration: duration, movieDesc: movieDesc, posName: posName, posDesc: posDesc});
+        }
+        else{
+            let sqlReq = "INSERT INTO person (first_name, last_name, birth_date) VALUES (?,?,?)";
+            conn.query(sqlReq, [req.body.firstNameInput, req.body.lastNameInput, req.body.birthDateInput], (err, sqlRes)=>{
+                if(err){
+                    notice = "Esines viga!";
+                    res.render("addperson", {notice: notice, firstName: firstName, lastName: lastName, movieTitle: movieTitle, productionYear: productionYear, duration: duration, movieDesc: movieDesc, posName: posName, posDesc: posDesc});
+                    throw err;
+                }
+                else{
+                    notice = "Isik lisati andmebaasi!";
+                    res.render("addperson", {notice: notice, firstName: firstName, lastName: lastName, movieTitle: movieTitle, productionYear: productionYear, duration: duration, movieDesc: movieDesc, posName: posName, posDesc: posDesc});
+                }
+            });
+        }
     }
-
-    // Filmi lisamine
-    if (req.body.filmSubmit) {
-        const filmTitle = req.body.filmTitle();
-        const filmYear = req.body.filmYear();
-        console.log("Lisatud film:", {filmTitle}, {filmYear});
-        res.send("Film ", {filmTitle}, " ", {filmYear}, " lisatud!");
+    else if(req.body.movieSubmit){
+        if(!req.body.movieTitleInput || !req.body.productionYearInput || !req.body.durationInput || !req.body.movieDescInput){
+            notice = "Osa andmeid on puudu!";
+            movieTitle = req.body.movieTitleInput;
+            productionYear = req.body.productionYearInput;
+            duration = req.body.durationInput;
+            movieDesc = req.body.movieDescInput;
+            res.render("addperson", {notice: notice, firstName: firstName, lastName: lastName, movieTitle: movieTitle, productionYear: productionYear, duration: duration, movieDesc: movieDesc, posName: posName, posDesc: posDesc});
+        }
+        else{
+            let sqlReq = "INSERT INTO movie (title, production_year, duration, description) VALUES (?,?,?,?)";
+            conn.query(sqlReq, [req.body.movieTitleInput, req.body.productionYearInput, req.body.durationInput, req.body.movieDescInput], (err, sqlRes)=>{
+                if(err){
+                    notice = "Esines viga!";
+                    res.render("addperson", {notice: notice, firstName: firstName, lastName: lastName, movieTitle: movieTitle, productionYear: productionYear, duration: duration, movieDesc: movieDesc, posName: posName, posDesc: posDesc});
+                    throw err;
+                }
+                else{
+                    notice = "Film lisati andmebaasi!";
+                    res.render("addperson", {notice: notice, firstName: firstName, lastName: lastName, movieTitle: movieTitle, productionYear: productionYear, duration: duration, movieDesc: movieDesc, posName: posName, posDesc: posDesc});
+                }
+            });
+        }
     }
+    else if(req.body.positionSubmit){
+        if(!req.body.posNameInput || !req.body.posDescInput){
+            notice = "Osa andmeid on puudu!";
+            posName = req.body.posNameInput;
+            posDesc = req.body.posDescInput;
+            res.render("addData", {notice: notice, firstName: firstName, lastName: lastName, movieTitle: movieTitle, productionYear: productionYear, duration: duration, movieDesc: movieDesc, posName: posName, posDesc: posDesc});
+        }
+        else{
+            let sqlReq = "INSERT INTO position (position_name, description) VALUES (?,?)";
+            conn.query(sqlReq, [req.body.posNameInput, req.body.posDescInput], (err, sqlRes)=>{
+                if(err){
+                    notice = "Esines viga!";
+                    res.render("addperson", {notice: notice, firstName: firstName, lastName: lastName, movieTitle: movieTitle, productionYear: productionYear, duration: duration, movieDesc: movieDesc, posName: posName, posDesc: posDesc});
+                    throw err;
+                }
+                else{
+                    notice = "Amet lisati andmebaasi!";
+                    res.render("addperson", {notice: notice, firstName: firstName, lastName: lastName, movieTitle: movieTitle, productionYear: productionYear, duration: duration, movieDesc: movieDesc, posName: posName, posDesc: posDesc});
+                }
+            });
+        }
+    }
+    else{
+        notice = "Esines viga!";
+        res.render("addperson", {notice: notice, firstName: firstName, lastName: lastName, movieTitle: movieTitle, productionYear: productionYear, duration: duration, movieDesc: movieDesc, posName: posName, posDesc: posDesc});
+    }
+});
 
-    // Rolli lisamine
-    if (req.body.roleSubmit) {
-        const rolePerson = req.body.rolePerson();
-        const roleFilm = req.body.roleFilm();
-        const roleType = req.body.roleType();
-        console.log("Lisatud roll: ", {rolePerson}, " filmis ", {roleFilm}, " kui ", {roleType});
-        res.send("Roll ", {rolePerson}, " filmis ", {roleFilm}, " kui ", {roleType}, " lisatud!");
-	}
-	res.render("lisa");
+app.get("/eestifilm/lisaseos", (req, res)=>{
+	//kasutades async moodulit panen mitu andmebaasi päringut paraleelselt toimima
+	//loon SQL päringute (lausa tegevuste ehk funktsioonide) loendi
+	const myQueries = [
+		function(callback){
+			conn.execute("SELECT id, first_name, last_name, birth_date FROM person", (err, result)=>{
+				if(err){
+					return callback(err);
+				}
+				else {
+					return callback(null, result);
+				}
+			});
+		},
+		function(callback){
+			conn.execute("SELECT id, title, production_year FROM movie", (err, result)=>{
+				if(err){
+					return callback(err);
+				}
+				else {
+					return callback(null, result);
+				}
+			});
+		},
+		function(callback){
+			conn.execute("SELECT id, position_name FROM position", (err, result)=>{
+				if(err){
+					return callback(err);
+				}
+				else {
+					return callback(null, result);
+				}
+			});
+		},
+	];
+	//paneme need tegevused paraleelselt tööle, tulemuse saab siis kui kõik tehtud
+	//väljundiks üks koondlist
+	asyn.parallel(myQueries, (err, results)=>{
+		if(err){
+			throw err;
+		}
+		else {
+			console.log(results);
+			res.render("addrelations", {personList: results[0], movieList: results[1], positionList: results[2]});
+		}
+	});
+	//let sqlReq = "SELECT id, first_name, last_name, birth_date FROM person";
+	//conn.execute(sqlReq, (err, result)=>{
+	//	if(err){
+	//		throw err
+	//	}
+	//	else {
+	//		console.log(result);
+	//		res.render("addrelations", {personList: result});
+	//	}
+	//})
 });
 
 app.get("/eestifilm/tegelased", (req, res)=>{
 	//loon andmebaasi päringus
-	let sqlReq = "SELECT first_name, last_name, birth_date FROM person";
+	let sqlReq = "SELECT id, first_name, last_name, birth_date FROM person";
 	conn.query(sqlReq, (err, sqlRes)=>{
 		if(err){
 			res.render("tegelased", {persons: []});
@@ -309,6 +437,11 @@ app.get("/eestifilm/tegelased", (req, res)=>{
 		}
 	});
 	//res.render("tegelased");
+});
+
+app.get("/eestifilm/personrelations/:id", (req, res)=>{
+	console.log(req.params.id);
+	res.render("personrelations");
 });
 
 app.get("/photoupload", (req, res)=>{
@@ -338,17 +471,17 @@ app.post("/photoupload", upload.single("photoInput"), (req, res)=>{
 });
 
 app.get("/gallery", (req, res)=>{
-	let sqlReq = "SELECT file_name, alt_text FROM photos WHERE privacy = ? AND deleted IS NULL ORDER BY id DESC";
+	let sqlReq = "SELECT id, file_name, alt_text FROM photos WHERE privacy = ? AND deleted IS NULL ORDER BY id DESC";
 	const privacy = 3;
 	let photoList = [];
-	conn.query(sqlReq, [privacy], (err, result)=>{
+	conn.execute(sqlReq, [privacy], (err, result)=>{
 		if(err){
 			throw err;
 		}
 		else {
 			console.log(result);
 			for(let i = 0; i < result.length; i ++) {
-				photoList.push({href: "/gallery/thumb/" + result[i].file_name, alt: result[i].alt_text});
+				photoList.push({id: result[i].id, href: "/gallery/thumb/", filename: result[i].file_name, alt: result[i].alt_text});
 			}
 			res.render("gallery", {listData: photoList});
 		}
