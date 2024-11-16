@@ -111,46 +111,54 @@ app.get("/signup", (req, res)=>{
 	res.render("signup");
 });
 
-app.post("/signup", (req, res)=>{
-	let notice = "Ootan andmeid";
-	if(!req.body.firstNameInput || !req.body.lastNameInput || !req.body.birthDateInput || !req.body.genderInput || !req.body.emailInput || req.body.passwordInput.length < 8 || req.body.passwordInput !== req.body.confirmPasswordInput){
-		console.log("Andmeid puudu või paroolid ei kattu!");
-		notice = "Andmeid puudu või paroolid ei kattu!";
-		res.render("signup", {notice: notice});
-	}
-	else{
-		notice = "Andmed korras!";
-		bcrypt.genSalt(10, (err, salt)=>{
-			if (err){
-				notice = "Tehniline viga, kasutajat ei loodud.";
-				res.render("signup", {notice: notice});
-			}
+app.post("/signup", (req, res) => {
+    let notice = "Ootan andmeid";
+    if (!req.body.firstNameInput || !req.body.lastNameInput || !req.body.birthDateInput || !req.body.genderInput || !req.body.emailInput || req.body.passwordInput.length < 8 || req.body.passwordInput !== req.body.confirmPasswordInput) {
+        console.log("Andmeid puudu või paroolid ei kattu!");
+        notice = "Andmeid puudu või paroolid ei kattu!";
+        res.render("signup", {notice: notice, firstName: req.body.firstNameInput, lastName: req.body.lastNameInput, birthDate: req.body.birthDateInput, gender: req.body.genderInput, email: req.body.emailInput});
+    } 
+	else {
+        // Kas emailiga on juba konto olemas
+        let sqlCheckEmail = "SELECT id FROM vp2users WHERE email = ?";
+        conn.execute(sqlCheckEmail, [req.body.emailInput], (err, result) => {
+            if (err) {
+                notice = "Tehniline viga, kasutajat ei loodud.";
+                console.log(err);
+                res.render("signup", {notice: notice});
+            } 
+			else if (result.length > 0) {
+                notice = "Selle e-mailiga kasutaja on juba olemas!";
+                res.render("signup", {notice: notice, firstName: req.body.firstNameInput, lastName: req.body.lastNameInput, birthDate: req.body.birthDateInput, gender: req.body.genderInput, email: req.body.emailInput});
+            } 
 			else {
-				bcrypt.hash(req.body.passwordInput, salt, (err, pwdHash)=>{
-					if (err){
-						notice = "Tehniline viga parooli krüpteerimisel, kasutajat ei loodud.";
-						res.render("signup", {notice: notice});
-					}
-					else {
-						let sqlReq = "INSERT INTO vp2users (first_name, last_name, birth_date, gender, email, password) VALUES(?,?,?,?,?,?)";
-						conn.execute(sqlReq, [req.body.firstNameInput, req.body.lastNameInput, req.body.birthDateInput, req.body.genderInput, req.body.emailInput, pwdHash], (err, result)=>{
-							if (err){
-								notice = "Tehniline viga andmebaasi kirjutamisel, kasutajat ei loodud.";
-								res.render("signup", {notice: notice});
-							}
-							else {
-								notice = "Kasutaja " + req.body.emailInput + " edukalt loodud!";
-								res.render("signup", {notice: notice});
-							}
-						});
-						
-					}
-				});
-			}
-		});
-		//res.render("signup", {notice: notice});
-	}
-	//res.render("signup");
+                bcrypt.genSalt(10, (err, salt) => {
+                    if (err) {
+                        notice = "Tehniline viga, kasutajat ei loodud.";
+                        res.render("signup", {notice: notice});
+                    } else {
+                        bcrypt.hash(req.body.passwordInput, salt, (err, pwdHash) => {
+                            if (err) {
+                                notice = "Tehniline viga parooli krüpteerimisel, kasutajat ei loodud.";
+                                res.render("signup", {notice: notice});
+                            } else {
+                                let sqlInsert = "INSERT INTO vp2users (first_name, last_name, birth_date, gender, email, password) VALUES(?,?,?,?,?,?)";
+                                conn.execute(sqlInsert, [req.body.firstNameInput, req.body.lastNameInput, req.body.birthDateInput, req.body.genderInput, req.body.emailInput, pwdHash], (err, result) => {
+                                    if (err) {
+                                        notice = "Tehniline viga andmebaasi kirjutamisel, kasutajat ei loodud.";
+                                        res.render("signup", {notice: notice});
+                                    } else {
+                                        notice = "Kasutaja " + req.body.emailInput + " edukalt loodud!";
+                                        res.render("signup", {notice: notice});
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
 });
 
 app.get("/timenow", (req, res)=>{
@@ -442,6 +450,12 @@ app.get("/eestifilm/tegelased", (req, res)=>{
 app.get("/eestifilm/personrelations/:id", (req, res)=>{
 	console.log(req.params.id);
 	res.render("personrelations");
+});
+
+app.get("/eestifilm/personrelations/:id", (req, res)=>{
+    console.log(req.params.id);
+    let sqlReq = "SELECT movie.title, movie.production_year FROM movie JOIN person ON movie.person_id == person.id JOIN position ON position.id == movie.position_id"    
+        res.render("personrelations", {relationList: sqlRes});
 });
 
 app.get("/photoupload", (req, res)=>{
