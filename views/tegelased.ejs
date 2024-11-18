@@ -18,10 +18,10 @@
 	   <li><a href="/eestifilm">Eesti filmi avaleht</a></li>
 	</ul>
 	<hr>
-	<ul>
-	  <% persons.forEach(function(item){ %>
-	  <li><%= item.first_name %> <%= item.last_name %>, sündinud: <%= item.birth_date %>, <a href="/eestifilm/personrelations/<%= item.id %>">Vaata seoseid</a></li>
-	  <% }); %>
-	</ul>
+  <ul>
+    <% persons.forEach(function(item) { %>
+      <li><%= item.first_name %> <%= item.last_name %>, sündinud: <%= item.birth_date %>, <a href="/eestifilm/personrelations/<%= item.id %>">Seosed</a></li>
+    <% }); %>
+  </ul>
 </body>
 </html>
