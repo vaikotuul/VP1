@@ -1,0 +1,44 @@
+<DOCTYPE! html>
+<html lang="et">
+<head>
+	<meta charset="utf-8">
+	<title>Viljavedu</title>
+</head>
+<body>
+	<h1>Viljavedu</h1>
+	
+	<h2>Lisa või uuenda koormat</h2>
+	<form action="/lisa-koorem" method="POST">
+		<label>Auto number:</label>
+		<input type="text" name="truck" required>
+		<br>
+		<label>Sisenemismass (kg):</label>
+		<input type="number" name="weight_in" required>
+		<br>
+		<label>Väljumismass (kg):</label>
+		<input type="number" name="weight_out">
+		<br>
+		<button type="submit">Sisesta</button>
+	</form>
+	
+	<hr>
+
+	<h2>Lisa väljumismass olemasolevale autole</h2>
+	<form action="/uuenda-valjumismass" method="POST">
+		<label>Vali auto:</label>
+		<select name="truck">
+			<% koormad.forEach(koorem => { %>
+				<option value="<% koorem.id %>">
+					Auto: <%= koorem.truck %>, Sisenemismass: <%= koorem.weight_in %>
+				</option>
+			<% }) %>
+		</select>
+		<br>
+		<label>Väljumismass:</label>
+		<input type="number" name="weight_out" required>
+		<br>
+		<button type="submit">Uuenda</button>
+	</form>
+	<a href="/">Tagasi avalehele</a>
+</body>
+</html>

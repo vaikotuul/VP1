@@ -48,10 +48,36 @@ const eestifilmRouter = require("./routes/eestifilmRouter");
 app.use("/eestifilm", eestifilmRouter);
 let notice = "";
 
+//Avaleht
 app.get("/", (req, res)=>{
-	//res.send("Express läks täitsa käima!");
-	//console.log(dbInfo.configData.host);
-	res.render("index");
+    const myQueries = [
+        function(callback){
+            conn.execute("SELECT id, file_name, alt_text FROM photos WHERE privacy = 3 AND deleted IS NULL ORDER BY added DESC", (err, result)=>{
+                if(err) {
+                    return callback(err);
+                }
+                else {
+                    return callback(null, result);
+                }
+            });
+        }
+    ];
+    //paneme need tegevused paralleelselt tööle. tulemuse saab siis kui kõik tehtud. tulemuseks üks koondlist.
+    asyn.parallel(myQueries, (err, results)=>{
+        if(err){
+            console.log(err);
+            res.render("index");
+        }
+        else{
+            console.log(results[0][0]);
+            res.render("index", {
+                id: results[0][0].id,
+                href: "/gallery/thumb/", 
+                filename: results[0][0].file_name, 
+                alt: results[0][0].alt_text
+            });
+        }
+    });
 });
 
 app.post("/", (req, res)=>{
@@ -106,11 +132,11 @@ app.post("/", (req, res)=>{
 	//res.render("index");
 });
 
-app.get("/", (req, res)=>{
-	req.session.destroy();
+//app.get("/", (req, res)=>{
+//	req.session.destroy();
 	//mySession = null;
-	res.redirect("/");
-});
+//	res.redirect("/");
+//});
 
 app.get("/home", general.checkLogin, (req, res)=>{
 	console.log("Sisse on loginud kasutaja: " + req.session.userId);
@@ -306,23 +332,12 @@ app.post("/photoupload", upload.single("photoInput"), (req, res)=>{
 	});
 });
 
-app.get("/gallery", general.checkLogin,(req, res)=>{
-	let sqlReq = "SELECT id, file_name, alt_text FROM photos WHERE privacy = ? AND deleted IS NULL ORDER BY id DESC";
-	const privacy = 3;
-	let photoList = [];
-	conn.execute(sqlReq, [privacy], (err, result)=>{
-		if(err){
-			throw err;
-		}
-		else {
-			console.log(result);
-			for(let i = 0; i < result.length; i ++) {
-				photoList.push({id: result[i].id, href: "/gallery/thumb/", filename: result[i].file_name, alt: result[i].alt_text});
-			}
-			res.render("gallery", {listData: photoList});
-		}
-	});
-	//res.render("gallery");
-});
+//galerii osa eraldi marsruutide failiga
+const galleryRouter = require("./routes/galleryRouter");
+app.use("/gallery", galleryRouter);
+
+//galerii osa eraldi marsruutide failiga
+const weatherRouter = require("./routes/weatherRouter");
+app.use("/weather", weatherRouter);
 
 app.listen(5221);

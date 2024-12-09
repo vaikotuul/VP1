@@ -9,6 +9,14 @@ const dateFormattedEt = function(){
 	return dateNow + ". " + monthNamesEt[monthNow] + " " + yearNow;
 }
 
+const fromDateFormattedEt = function(timeNow){	
+	//let timeNow = new Date();
+	let dateNow = timeNow.getDate();
+	let monthNow = timeNow.getMonth();
+	let yearNow = timeNow.getFullYear();
+	return dateNow + ". " + monthNamesEt[monthNow] + " " + yearNow;
+}
+
 const weekDayEt = function(){
 	let timeNow = new Date();
 	let dayNow = timeNow.getDay();
@@ -35,4 +43,4 @@ const partOfDay = function(){
 }
 
 //ekspordin kõik vajaliku
-module.exports = {dateFormattedEt: dateFormattedEt, weekDayEt: weekDayEt, timeFormattedEt: timeFormattedEt, weekdayNamesEt: weekdayNamesEt, monthNames: monthNamesEt, dayPart: partOfDay};
+module.exports = {dateFormattedEt: dateFormattedEt, fromDateFormattedEt: fromDateFormattedEt, weekDayEt: weekDayEt, timeFormattedEt: timeFormattedEt, weekdayNamesEt: weekdayNamesEt, monthNamesEt: monthNamesEt, dayPart: partOfDay};

@@ -1,0 +1,36 @@
+<DOCTYPE! html>
+<html lang="et">
+<head>
+	<meta charset="utf-8">
+	<title>Kokkuvõte</title>
+</head>
+<body>
+	<h1>Kokkuvõte</h1>
+	
+	<form action="/kokkuvote" method="GET">
+		<label>Filtreeri auto numbri järgi:</label>
+		<input type="text" name="filter" placeholder="Sisesta auto number">
+		<br>
+		<button type="submit">Filtreeri</button>
+	</form>
+	<a href="/kokkuvote">Vaata kõiki koormaid</a>
+	<hr>
+	<h2>Kõik koormad</h2>
+	<table border="1">
+		<tr>
+			<th>Auto number</th>
+			<th>Sisenemismass</th>
+			<th>Väljumismass</th>
+		</tr>
+		<% koormad.forEach(koorem => { %>
+			<tr>
+				<td><%= koorem.truck %></td>
+				<td><%= koorem.weight_in %></td>
+				<td><%= koorem.weight_out %></td>
+			</tr>
+		<% }); %>
+	</table>
+	<h3>Veetud vilja kogus: <%= totalMass %> kg</h3>
+	<a href="/">Tagasi avalehele</a>
+</body>
+</html>
