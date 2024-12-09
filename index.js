@@ -24,6 +24,7 @@ const asyn = require("async");
 app.set("view engine", "ejs");
 //määran jagatavate failide kausta
 app.use(express.static("public"));
+app.use(express.urlencoded({extended: true}));
 //kasutame body-parserit päringute parsimiseks (kui ainult tekst, siis false, kui ka pildid jms, siis true)
 app.use(bodyparser.urlencoded({extended: true}));
 //seadistame fotode üleslaadimiseks vahevara (middleware), mis määrab kataloogi, kuhu laetakse
@@ -48,6 +49,7 @@ const eestifilmRouter = require("./routes/eestifilmRouter");
 app.use("/eestifilm", eestifilmRouter);
 let notice = "";
 
+//Avaleht
 //Avaleht
 app.get("/", (req, res)=>{
     const myQueries = [
@@ -79,6 +81,7 @@ app.get("/", (req, res)=>{
         }
     });
 });
+
 
 app.post("/", (req, res)=>{
 	let notice = null;

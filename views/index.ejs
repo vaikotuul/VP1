@@ -30,5 +30,12 @@
 	   <li><a href="/signup">Kasutajakonto loomine</a></li>
 	</ul>
 	<hr>
+  <h2>Uusim avalik foto</h2>
+  <div class="gallery">
+  <img src="<%= href %><%= filename %>" alt="<%= alt %>" data-filename="<%= filename %>" data-id="<%= id %>" class="thumbs">
+  </div>
+  <p><%= locals.notice || "" %></p>
+	
+
 </body>
 </html>

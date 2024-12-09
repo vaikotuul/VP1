@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Vaiko Villiam Tuul, veebiprogrammeerimine 2024</title>
+</head>
+<body>
+	<img src="/banner/vp_banner_2024.png" alt="Veebiprogrammeerimise kursuse bänner">
+	<h1>Uudised</h1>
+	<ul>
+		<li><a href="/news">Uudiste avaleht</a></li>
+		<li><a href="/home">Avalehele</a></li>
+	</ul>
+	<hr>
+	<h2>Uuenda uudis</h2>
+	<form action="<%= news.id %>" method="POST">
+    <label for="titleInput">Pealkiri:</label>
+    <input type="text" id="titleInput" name="titleInput" value="<%= news.title %>" required />
+
+    <label for="contentInput">Sisu:</label>
+    <textarea id="contentInput" name="contentInput" required><%= news.content %></textarea>
+
+    <label for="expireInput">Kehtiv kuni:</label>
+    <input type="date" id="expireInput" name="expireInput" value="<%= news.expirationDate %>" required />
+
+    <button type="submit">Salvesta muudatused</button>
+	</form>
+
+	<p><%= locals.notice || 'Ootel!' %></p>
+</body>
+</html>
